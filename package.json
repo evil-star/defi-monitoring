@@ -1,0 +1,32 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "@ant-design/nextjs-registry": "^1.0.0",
+    "@tanstack/query-sync-storage-persister": "^5.45.0",
+    "@tanstack/react-query": "^5.40.1",
+    "@tanstack/react-query-persist-client": "^5.45.0",
+    "antd": "^5.18.0",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "usehooks-ts": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "sass": "^1.77.4",
+    "typescript": "^5"
+  }
+}
