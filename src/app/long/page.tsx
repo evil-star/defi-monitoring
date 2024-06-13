@@ -1,7 +1,7 @@
 'use client';
 
 import useCalculatedLendingData from '@/hooks/useCalculatedLendingData';
-import { IPosition } from '@/types/positions.interface';
+import { ILongPosition } from '@/types/positions.interface';
 import calcBorrowByHF from '@/utils/calcBorrowByHF';
 import calcBorrowByLiquidationPrice from '@/utils/calcBorrowByLiquidationPrice';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ import {
   Statistic,
   Table,
   Timeline,
+  Typography,
 } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
@@ -28,7 +29,7 @@ type Props = {};
 
 const Page = (props: Props) => {
   const [form] = Form.useForm();
-  const [savedPositions, setSavedPositions] = useLocalStorage<IPosition[]>(
+  const [savedPositions, setSavedPositions] = useLocalStorage<ILongPosition[]>(
     'saved-positions',
     []
   );
@@ -142,6 +143,7 @@ const Page = (props: Props) => {
         </Form>
       </Modal>
       <Col span={8}>
+        <Typography.Title level={2}>Лонг</Typography.Title>
         <Form
           initialValues={{
             calcType: 'hf',

@@ -1,4 +1,4 @@
-export interface IPosition {
+export interface ILongPosition {
   name: string;
   type: 'hf' | 'liqPrice';
   valueOfType: number;

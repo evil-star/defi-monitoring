@@ -9,7 +9,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { useLocalStorage } from 'usehooks-ts';
-import { IPosition } from '@/types/positions.interface';
+import { ILongPosition } from '@/types/positions.interface';
 
 const { Header, Content } = Layout;
 
@@ -30,7 +30,7 @@ const RootLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const [savedPositions, setSavedPositions] = useLocalStorage<IPosition[]>(
+  const [savedPositions] = useLocalStorage<ILongPosition[]>(
     'saved-positions',
     []
   );

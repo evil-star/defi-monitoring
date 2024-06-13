@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Col, Form, InputNumber, Row, Select, Table } from 'antd';
+import { Col, Form, InputNumber, Row, Select, Table, Typography } from 'antd';
 import React, { useEffect, useMemo } from 'react';
 
 type Props = {};
@@ -40,6 +40,7 @@ const Page = (props: Props) => {
   return (
     <Row gutter={24}>
       <Col span={8}>
+        <Typography.Title level={2}>Лупинг</Typography.Title>
         <Form
           initialValues={{
             ltv: 0.6,
@@ -55,9 +56,7 @@ const Page = (props: Props) => {
             <Select
               showSearch
               placeholder={
-                !!tokensListError
-                  ? 'Ошибка при запросе к API'
-                  : 'Токен'
+                !!tokensListError ? 'Ошибка при запросе к API' : 'Токен'
               }
               filterOption={(input, option) =>
                 (`${option?.label}` || '')
