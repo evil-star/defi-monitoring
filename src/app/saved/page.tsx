@@ -25,6 +25,11 @@ type Props = {};
 
 const Page = (props: Props) => {
   const router = useRouter();
+  const [savedPositions, setSavedPositions] = useLocalStorage<ILongPosition[]>(
+    'saved-positions',
+    []
+  );
+
   const {
     isLoading: tokensListLoading,
     data: tokensList,
@@ -33,12 +38,8 @@ const Page = (props: Props) => {
     queryFn: () =>
       fetch('https://api.coinpaprika.com/v1/tickers').then((res) => res.json()),
     refetchInterval: 300000,
+    enabled: !!savedPositions?.length
   });
-
-  const [savedPositions, setSavedPositions] = useLocalStorage<ILongPosition[]>(
-    'saved-positions',
-    []
-  );
 
   const savedPositionsModified = useMemo(
     () =>
