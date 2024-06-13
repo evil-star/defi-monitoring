@@ -1,4 +1,5 @@
 export interface ILongPosition {
+  id: string;
   name: string;
   type: 'hf' | 'liqPrice';
   valueOfType: number;
