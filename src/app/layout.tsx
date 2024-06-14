@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Flex, Layout, Menu, Typography } from 'antd';
 import '@/assets/styles/global.sass';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
@@ -10,6 +10,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { useLocalStorage } from 'usehooks-ts';
 import { ILongPosition } from '@/types/positions.interface';
+import { usePathname } from 'next/navigation';
 
 const { Header, Content } = Layout;
 
@@ -30,10 +31,20 @@ const RootLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const pathname = usePathname();
+  const [current, setCurrent] = useState(pathname);
   const [savedPositions] = useLocalStorage<ILongPosition[]>(
     'saved-positions',
     []
   );
+
+  useEffect(() => {
+    if (current !== pathname) setCurrent(pathname);
+  }, [pathname, current]);
+
+  const handleClick = (e: any) => {
+    setCurrent(e.key);
+  };
 
   return (
     <html lang='ru'>
@@ -63,22 +74,27 @@ const RootLayout = ({
                 <Menu
                   theme='dark'
                   mode='horizontal'
+                  onClick={handleClick}
+                  selectedKeys={[current]}
                   items={[
-                    { key: 1, label: <Link href='/long'>Лонг стратегии</Link> },
+                    {
+                      key: '/long',
+                      label: <Link href='/long'>Расчет лонга</Link>,
+                    },
                     // {
                     //   key: 2,
                     //   label: <Link href='/short'>Шорт стратегии</Link>,
                     // },
                     {
-                      key: 3,
+                      key: '/loop',
                       label: <Link href='/loop'>Лупинг</Link>,
                     },
                     {
-                      key: 4,
+                      key: '/lending',
                       label: <Link href='/lending'>Кредитование</Link>,
                     },
                     {
-                      key: 5,
+                      key: '/saved',
                       label: (
                         <Link href='/saved'>
                           <Flex align='center' gap={'10px'}>

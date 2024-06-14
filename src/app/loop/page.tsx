@@ -1,7 +1,17 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Col, Divider, Form, InputNumber, Row, Select, Table, Typography } from 'antd';
+import {
+  Col,
+  Divider,
+  Empty,
+  Form,
+  InputNumber,
+  Row,
+  Select,
+  Table,
+  Typography,
+} from 'antd';
 import React, { useEffect, useMemo } from 'react';
 
 type Props = {};
@@ -106,7 +116,7 @@ const Page = (props: Props) => {
           </Form>
         </Col>
         <Col span={16}>
-          {!!ltv && !!token && !!tokensCount && (
+          {!!ltv && !!token && !!tokensCount ? (
             <Table
               columns={[
                 {
@@ -168,6 +178,11 @@ const Page = (props: Props) => {
               }, [])}
               pagination={{ pageSize: 100 }}
             />
+          ) : (
+            <Empty
+              description={<>Заполните форму</>}
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            ></Empty>
           )}
         </Col>
       </Row>

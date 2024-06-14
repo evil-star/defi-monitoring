@@ -4,12 +4,14 @@ import useCalculatedLendingData from '@/hooks/useCalculatedLendingData';
 import { ILongPosition } from '@/types/positions.interface';
 import calcBorrowByHF from '@/utils/calcBorrowByHF';
 import calcBorrowByLiquidationPrice from '@/utils/calcBorrowByLiquidationPrice';
+import getHfColor from '@/utils/getHfColor';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
   Card,
   Col,
   Divider,
+  Empty,
   Flex,
   Form,
   Input,
@@ -23,6 +25,7 @@ import {
   Timeline,
   Typography,
 } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
@@ -50,6 +53,7 @@ const Page = (props: Props) => {
   const inputHealthFactor = Form.useWatch('hf', form);
   const borrowFactor = Form.useWatch('borrowFactor', form);
   const positionName = Form.useWatch('positionName', form);
+  const positionNote = Form.useWatch('positionNote', form);
   const deposit = tokensCount * tokenPrice;
 
   const {
@@ -115,7 +119,16 @@ const Page = (props: Props) => {
     setConfirmSaveActive(true);
   }, []);
 
-  const handleConfirmSave = useCallback(() => {
+  const handleConfirmSave = useCallback(async () => {
+    let isFormValid = true;
+    try {
+      await form.validateFields();
+    } catch {
+      isFormValid = false;
+    }
+
+    if (!isFormValid) return;
+
     if (editingPosition) {
       setSavedPositions((positions) => [
         ...positions.filter((p) => p.id !== editingPosition.id),
@@ -127,10 +140,10 @@ const Page = (props: Props) => {
           tokensCount,
           type: calcType,
           valueOfType: inputLiquidationPrice || inputHealthFactor,
-          borrowFactor: borrowFactor,
+          borrowFactor,
+          positionNote,
         },
       ]);
-      router.push('/saved');
     } else {
       setSavedPositions((positions) => [
         {
@@ -141,11 +154,13 @@ const Page = (props: Props) => {
           tokensCount,
           type: calcType,
           valueOfType: inputLiquidationPrice || inputHealthFactor,
-          borrowFactor: borrowFactor,
+          borrowFactor,
+          positionNote,
         },
         ...positions,
       ]);
     }
+    router.push('/saved');
     setConfirmSaveActive(false);
     form.setFieldValue('positionName', '');
   }, [
@@ -161,6 +176,7 @@ const Page = (props: Props) => {
     inputLiquidationPrice,
     inputHealthFactor,
     borrowFactor,
+    positionNote,
   ]);
 
   return (
@@ -171,21 +187,29 @@ const Page = (props: Props) => {
       <Divider />
       <Row gutter={24}>
         <Modal
-          title='Ведите название для позиции'
+          title='Сохранение позиции'
           open={confirmSaveActive}
           onOk={handleConfirmSave}
           onCancel={() => setConfirmSaveActive(false)}
           okText='Сохранить'
           cancelText='Отмена'
         >
+          <br />
           <Form
             form={form}
             initialValues={{
               positionName: editingPosition?.name || '',
             }}
           >
-            <Form.Item name='positionName'>
+            <Form.Item name='positionName' rules={[{ required: true }]}>
               <Input placeholder='Название' style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item name='positionNote'>
+              <TextArea
+                placeholder='Заметка к позиции'
+                rows={4}
+                style={{ width: '100%' }}
+              />
             </Form.Item>
           </Form>
         </Modal>
@@ -299,87 +323,104 @@ const Page = (props: Props) => {
           </Form>
         </Col>
         <Col span={16}>
-          <Timeline>
-            {!!deposit && (
-              <Timeline.Item>
-                Начальный депозит <b>{Number(deposit.toFixed(3))} $</b>
-              </Timeline.Item>
-            )}
-            {!!borrow && (
-              <Timeline.Item>
-                Берем стейблкойн в долг, покупаем токен и кладем на сторону
-                депозита, пока долг не составит{' '}
-                <b>{Number(borrow.toFixed(4))} $</b>
-              </Timeline.Item>
-            )}
-            {!!depositWithBorrow && (
-              <Timeline.Item>
-                Итоговая сумма депозита{' '}
-                <b>{Number(depositWithBorrow.toFixed(3))} $</b>
-              </Timeline.Item>
-            )}
-            {!!borrow && <Timeline.Item>PROFIT</Timeline.Item>}
-          </Timeline>
-          <Space wrap>
-            {!!liquidationPrice && (
-              <Card>
-                <Statistic
-                  title='Ликвидация при цене токена'
-                  value={`${Number(liquidationPrice.toFixed(4))}`}
-                  suffix='$'
+          {!!deposit &&
+          !!borrow &&
+          !!depositWithBorrow &&
+          !!liquidationPrice &&
+          !!healthFactor &&
+          !!riskFactor ? (
+            <>
+              <Timeline>
+                {!!deposit && (
+                  <Timeline.Item>
+                    Начальный депозит <b>{Number(deposit.toFixed(3))} $</b>
+                  </Timeline.Item>
+                )}
+                {!!borrow && (
+                  <Timeline.Item>
+                    Берем стейблкойн в долг, покупаем токен и кладем на сторону
+                    депозита, пока долг не составит{' '}
+                    <b>{Number(borrow.toFixed(4))} $</b>
+                  </Timeline.Item>
+                )}
+                {!!depositWithBorrow && (
+                  <Timeline.Item>
+                    Итоговая сумма депозита{' '}
+                    <b>{Number(depositWithBorrow.toFixed(3))} $</b>
+                  </Timeline.Item>
+                )}
+                {!!borrow && <Timeline.Item>PROFIT</Timeline.Item>}
+              </Timeline>
+              <Space wrap>
+                {!!liquidationPrice && (
+                  <Card>
+                    <Statistic
+                      title='Ликвидация при цене токена'
+                      value={`${Number(liquidationPrice.toFixed(4))}`}
+                      suffix='$'
+                    />
+                  </Card>
+                )}
+                {!!healthFactor && (
+                  <Card>
+                    <Statistic
+                      title='Health Factor'
+                      value={Number(healthFactor.toFixed(3))}
+                      valueStyle={{
+                        color: getHfColor(Number(healthFactor.toFixed(3))),
+                      }}
+                    />
+                  </Card>
+                )}
+                {!!riskFactor && (
+                  <Card>
+                    <Statistic
+                      title='Risk Factor'
+                      value={Number(riskFactor.toFixed(3))}
+                      suffix='%'
+                    />
+                  </Card>
+                )}
+              </Space>
+              <br />
+              <br />
+              {!!depositWithBorrow && (
+                <Table
+                  columns={[
+                    {
+                      title: 'Рост цены токена',
+                      dataIndex: 'priceChange',
+                      key: 'priceChange',
+                    },
+                    {
+                      title: 'Прибыль депозита с лонгом',
+                      dataIndex: 'income',
+                      key: 'income',
+                    },
+                    {
+                      title: 'Прибыль депозита без лонга',
+                      dataIndex: 'income2',
+                      key: 'income2',
+                    },
+                  ]}
+                  dataSource={[20, 50, 100, 150, 200, 300].map(
+                    (percent, index) => ({
+                      key: index + 1,
+                      priceChange: `+${percent}%`,
+                      income: `+${Math.round(
+                        depositWithBorrow * (percent / 100)
+                      )} $`,
+                      income2: `+${Math.round(deposit * (percent / 100))} $`,
+                    })
+                  )}
                 />
-              </Card>
-            )}
-            {!!healthFactor && (
-              <Card>
-                <Statistic
-                  title='Health Factor'
-                  value={Number(healthFactor.toFixed(3))}
-                />
-              </Card>
-            )}
-            {!!riskFactor && (
-              <Card>
-                <Statistic
-                  title='Risk Factor'
-                  value={Number(riskFactor.toFixed(3))}
-                  suffix='%'
-                />
-              </Card>
-            )}
-          </Space>
-          <br />
-          <br />
-          {!!depositWithBorrow && (
-            <Table
-              columns={[
-                {
-                  title: 'Рост цены токена',
-                  dataIndex: 'priceChange',
-                  key: 'priceChange',
-                },
-                {
-                  title: 'Прибыль депозита с лонгом',
-                  dataIndex: 'income',
-                  key: 'income',
-                },
-                {
-                  title: 'Прибыль депозита без лонга',
-                  dataIndex: 'income2',
-                  key: 'income2',
-                },
-              ]}
-              dataSource={[20, 50, 100, 150, 200, 300].map(
-                (percent, index) => ({
-                  key: index + 1,
-                  priceChange: `+${percent}%`,
-                  income: `+${Math.round(
-                    depositWithBorrow * (percent / 100)
-                  )} $`,
-                  income2: `+${Math.round(deposit * (percent / 100))} $`,
-                })
               )}
-            />
+            </>
+          ) : (
+            <Empty
+              description={<>Заполните форму</>}
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            ></Empty>
           )}
         </Col>
       </Row>
