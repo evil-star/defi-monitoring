@@ -318,7 +318,8 @@ const Page = (props: Props) => {
                     getRiskFactor(
                       borrowTokensCount * borrowTokensPrice,
                       depositTokensCount * depositTokensPrice,
-                      lth
+                      lth,
+                      borrowFactor
                     ).toFixed(1)
                   )} %`}
                 />
@@ -331,7 +332,8 @@ const Page = (props: Props) => {
                       borrowTokensCount * borrowTokensPrice,
                       depositTokensCount * depositTokensPrice,
                       depositTokensPrice,
-                      lth
+                      lth,
+                      borrowFactor
                     ).toFixed(4)
                   )} $`}
                 />

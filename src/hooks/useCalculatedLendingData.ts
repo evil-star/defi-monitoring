@@ -25,13 +25,13 @@ const useCalculatedLendingData = ({
   }, [borrow, borrowFactor, deposit, lth]);
 
   const riskFactor = useMemo(() => {
-    if (deposit && borrow && lth) return getRiskFactor(borrow, deposit, lth);
-  }, [borrow, deposit, lth]);
+    if (deposit && borrow && lth) return getRiskFactor(borrow, deposit, lth, borrowFactor);
+  }, [borrow, deposit, lth, borrowFactor]);
 
   const liquidationPrice = useMemo(() => {
-    if (borrow && deposit && tokenPrice && lth)
-      return getLiquidationPrice(borrow, deposit, tokenPrice, lth);
-  }, [borrow, tokenPrice, deposit, lth]);
+    if (borrow && deposit && tokenPrice && lth && borrowFactor)
+      return getLiquidationPrice(borrow, deposit, tokenPrice, lth, borrowFactor);
+  }, [borrow, tokenPrice, deposit, lth, borrowFactor]);
 
   return {
     healthFactor,

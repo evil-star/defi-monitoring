@@ -165,7 +165,7 @@ const Page = (props: Props) => {
                               <Statistic
                                 title='Цена ликвидации'
                                 value={`${Number(
-                                  position.liquidationPrice.toFixed(1)
+                                  position.liquidationPrice.toFixed(3)
                                 )} $`}
                               />
                             </Flex>

@@ -5,7 +5,10 @@ import getHf from './getHf';
 import getRiskFactor from './getRiskFactor';
 import getLiquidationPrice from './getLiquidationPrice';
 
-const formatSavedPositions = (savedPositions: ILongPosition[], tokensList: any) => {
+const formatSavedPositions = (
+  savedPositions: ILongPosition[],
+  tokensList: any
+) => {
   return savedPositions
     .map((position) => {
       let borrowed = 0;
@@ -42,12 +45,18 @@ const formatSavedPositions = (savedPositions: ILongPosition[], tokensList: any) 
           position.lth,
           position.borrowFactor
         ),
-        riskFactor: getRiskFactor(borrowed, deposit, position.lth),
+        riskFactor: getRiskFactor(
+          borrowed,
+          deposit,
+          position.lth,
+          position.borrowFactor
+        ),
         liquidationPrice: getLiquidationPrice(
           borrowed,
           deposit,
           tokenPrice,
-          position.lth
+          position.lth,
+          position.borrowFactor
         ),
         borrowed,
         deposit,

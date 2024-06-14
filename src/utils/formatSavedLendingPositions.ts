@@ -32,7 +32,8 @@ const formatSavedLendingPositions = (
           getRiskFactor(
             position.borrowTokensCount * borrowTokensPrice,
             position.depositTokensCount * depositTokensPrice,
-            position.lth
+            position.lth,
+            position.borrowFactor
           ).toFixed(1)
         )} %`,
         borrowTokenLiqPrice: `${Number(
@@ -46,7 +47,8 @@ const formatSavedLendingPositions = (
             position.borrowTokensCount * borrowTokensPrice,
             position.depositTokensCount * depositTokensPrice,
             depositTokensPrice,
-            position.lth
+            position.lth,
+            position.borrowFactor
           ).toFixed(4)
         )} $`,
         depositTokensPrice,

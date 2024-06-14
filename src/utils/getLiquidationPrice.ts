@@ -2,9 +2,10 @@ const getLiquidationPrice = (
   borrow: number,
   deposit: number,
   tokenPrice: number,
-  lth: number
+  lth: number,
+  borrowFactor: number
 ) => {
-  return borrow / ((deposit / tokenPrice) * lth);
+  return (borrow * 1) / borrowFactor / ((deposit / tokenPrice) * lth);
 };
 
 export default getLiquidationPrice;
