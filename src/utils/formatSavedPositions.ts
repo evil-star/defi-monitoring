@@ -1,6 +1,4 @@
 import { ILongPosition } from '@/types/positions.interface';
-import calcBorrowByHF from './calcBorrowByHF';
-import calcBorrowByLiquidationPrice from './calcBorrowByLiquidationPrice';
 import getHf from './getHf';
 import getRiskFactor from './getRiskFactor';
 import getLiquidationPrice from './getLiquidationPrice';
@@ -11,54 +9,35 @@ const formatSavedPositions = (
 ) => {
   return savedPositions
     .map((position) => {
-      let borrowed = 0;
       const token = tokensList?.find(
         (token: any) => token.id === position.tokenId
       );
       const tokenPrice = token?.quotes?.USD?.price || 0;
       const tokenSymbol = token?.symbol || '';
 
-      if (position.type === 'hf') {
-        borrowed = calcBorrowByHF(
-          position.tokensCount * tokenPrice,
-          position.lth,
-          position.valueOfType || 1,
-          position.borrowFactor
-        );
-      }
-      if (position.type === 'liqPrice') {
-        borrowed = calcBorrowByLiquidationPrice(
-          position.tokensCount,
-          position.lth,
-          tokenPrice,
-          position.valueOfType || 1,
-          position.borrowFactor
-        );
-      }
-
-      const deposit = position.tokensCount * tokenPrice + borrowed;
+      const deposit =
+        position.tokensCount * tokenPrice + (position.borrowed || 0);
 
       return {
         healthFactor: getHf(
           deposit,
-          borrowed,
+          position.borrowed || 0,
           position.lth,
           position.borrowFactor
         ),
         riskFactor: getRiskFactor(
-          borrowed,
+          position.borrowed || 0,
           deposit,
           position.lth,
           position.borrowFactor
         ),
         liquidationPrice: getLiquidationPrice(
-          borrowed,
+          position.borrowed || 0,
           deposit,
           tokenPrice,
           position.lth,
           position.borrowFactor
         ),
-        borrowed,
         deposit,
         tokenSymbol,
         tokenPrice,

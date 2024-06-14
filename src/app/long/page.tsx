@@ -142,6 +142,7 @@ const Page = (props: Props) => {
           valueOfType: inputLiquidationPrice || inputHealthFactor,
           borrowFactor,
           positionNote,
+          borrowed: borrow,
         },
       ]);
     } else {
@@ -156,6 +157,7 @@ const Page = (props: Props) => {
           valueOfType: inputLiquidationPrice || inputHealthFactor,
           borrowFactor,
           positionNote,
+          borrowed: borrow,
         },
         ...positions,
       ]);
