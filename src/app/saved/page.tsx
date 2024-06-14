@@ -190,7 +190,7 @@ const Page = (props: Props) => {
                                   valueStyle={{ fontSize: 16 }}
                                   title='Долг'
                                   value={`${Number(
-                                    position.borrowed.toFixed(2)
+                                    position?.borrowed?.toFixed(2)
                                   )} $`}
                                 />
                               </Col>
