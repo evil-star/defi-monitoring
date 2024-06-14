@@ -38,7 +38,6 @@ const formatSavedPositions = (
           position.lth,
           position.borrowFactor
         ),
-        deposit,
         tokenSymbol,
         tokenPrice,
         ...position,
