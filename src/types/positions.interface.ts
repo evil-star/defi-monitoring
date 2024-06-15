@@ -6,6 +6,7 @@ export interface ILongPosition {
   tokenId: string;
   tokenSymbol?: string;
   tokensCount: number;
+  tokensCountTotal: number;
   lth: number;
   borrowFactor: number;
   positionNote?: string;

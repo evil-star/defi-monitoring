@@ -182,12 +182,7 @@ const Page = (props: Props) => {
                                       (position.borrowed || 0)
                                     ).toFixed(1)
                                   )} $ (${Number(
-                                    (
-                                      (position.tokensCount *
-                                        position.tokenPrice +
-                                        (position.borrowed || 0)) /
-                                      position.tokenPrice
-                                    ).toFixed(5)
+                                    position.tokensCountTotal.toFixed(5)
                                   )}
                                 ${position.tokenSymbol})`}
                                 />
