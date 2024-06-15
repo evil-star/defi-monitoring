@@ -15,8 +15,7 @@ const formatSavedPositions = (
       const tokenPrice = token?.quotes?.USD?.price || 0;
       const tokenSymbol = token?.symbol || '';
 
-      const deposit =
-        position.tokensCountTotal * tokenPrice + (position.borrowed || 0);
+      const deposit = position.tokensCountTotal * tokenPrice;
 
       return {
         healthFactor: getHf(
