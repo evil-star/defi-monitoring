@@ -80,7 +80,11 @@ const Page = (props: Props) => {
                       title='Суммарный депозит'
                       value={`${Number(
                         savedPositionsModified
-                          .reduce((prev, cur) => prev + (cur.deposit || 0), 0)
+                          .reduce(
+                            (prev, cur) =>
+                              prev + cur.tokensCountTotal * cur.tokenPrice,
+                            0
+                          )
                           .toFixed(1)
                       )} $`}
                     />
