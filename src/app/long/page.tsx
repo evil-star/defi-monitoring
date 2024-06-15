@@ -169,13 +169,15 @@ const Page = (props: Props) => {
     form.setFieldValue('positionName', '');
   }, [
     editingPosition,
+    router,
     form,
     setSavedPositions,
-    router,
     positionName,
     lth,
     token,
     tokensCount,
+    borrow,
+    tokenPrice,
     calcType,
     inputLiquidationPrice,
     inputHealthFactor,
@@ -203,6 +205,7 @@ const Page = (props: Props) => {
             form={form}
             initialValues={{
               positionName: editingPosition?.name || '',
+              positionNote: editingPosition?.positionNote || '',
             }}
           >
             <Form.Item name='positionName' rules={[{ required: true }]}>

@@ -112,7 +112,7 @@ const Page = (props: Props) => {
                   <>
                     <Row gutter={16}>
                       {savedPositionsModified.map((position, index) => (
-                        <Col key={index} span={6}>
+                        <Col key={index} span={8}>
                           <Card
                             title={
                               <Flex align='center'>
