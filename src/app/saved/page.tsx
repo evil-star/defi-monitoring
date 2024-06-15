@@ -177,12 +177,15 @@ const Page = (props: Props) => {
                                   title='Депозит'
                                   value={`${Number(
                                     (
-                                      position.tokensCount * position.tokenPrice
+                                      position.tokensCount *
+                                        position.tokenPrice +
+                                      (position.borrowed || 0)
                                     ).toFixed(1)
                                   )} $ (${Number(
                                     (
                                       (position.tokensCount *
-                                        position.tokenPrice) /
+                                        position.tokenPrice +
+                                        (position.borrowed || 0)) /
                                       position.tokenPrice
                                     ).toFixed(5)
                                   )}
