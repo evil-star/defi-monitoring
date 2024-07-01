@@ -110,7 +110,7 @@ const Page = (props: Props) => {
                   <Empty description='Нет сохраненных позиций' />
                 ) : (
                   <>
-                    <Row gutter={16}>
+                    <Row gutter={[16, 16]}>
                       {savedPositionsModified.map((position, index) => (
                         <Col key={index} span={8}>
                           <Card
